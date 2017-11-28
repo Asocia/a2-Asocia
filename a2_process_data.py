@@ -56,8 +56,10 @@ def is_number(row_index,column_index):
 def make_number(row_index,column_index):
 	try:
 		contents[row_index][column_index]=int(contents[row_index][column_index])
+		return False
 	except ValueError:
 		contents[row_index][column_index]=round(float(contents[row_index][column_index]),2)
+		return True
 #Converts whole page-data to their correct type.
 def string_to_number():
 	for i in range(row()):
@@ -72,6 +74,7 @@ def total():
 			for i in range(4,row()):
 				if is_row_exists(i):
 					total+=contents[i][j]
+					
 			contents[3][j]=total
 #Does the calculations for net migrations of every provinces
 def net_migration():
@@ -91,8 +94,10 @@ def calculate_the_cells():
 	total()
 	rate_of_net()
 
+					
 string_to_number()
 calculate_the_cells()
+
 template="""<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -209,10 +214,7 @@ def summary_columns(i):
 	elif i==4:
 		return columns%("Average population of cities with population over 2M",str(avg_over_2M()))
 			
-
 print(template %(title(),make_table(),summary_statistics%summary_table()))
-
-#sdadas
 
 
 
