@@ -116,27 +116,6 @@ template="""<!DOCTYPE html>
             }
     </style>
   </head>
-  <style>
-    body{
-      font-family:Calibri, sans-serif;
-      background-color:azure;
-        }
-    th{
-      font-size:18px;
-      color:#000000;
-      
-      }
-    table, tr,th,td{
-      border: 2px solid;
-      border-color: blue;
-      border-collapse:collapse;
-      padding:4px 5px 4px 4px;
-      }
-    .title{
-      font-size:18px;
-      color:#456FEA;
-          }
-  </style>
   <body>
     %s
     %s
