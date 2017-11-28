@@ -107,13 +107,12 @@ average=sum//count_2
 #print(type(contents[0][1])," (... Still doesn't make any sense.)")
 #print("HTML output for the calculated values"+"  (... Wait, what?? Are you serious?",end=" ")
 #print("I must confess... I'm really impressed now! Let's see then :) )",end="\n\n")
-templete="""
-<!DOCTYPE html>
+templete="""<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-­8">
     <title>%s</title>
-    </head>
+  </head>
   <body>
     <p>Total population is:%d</p>
     <p>Number of cities with population higher than 2M:%d</p>
