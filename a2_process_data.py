@@ -70,7 +70,8 @@ def total():
 		if is_number(3,j):
 			total=0
 			for i in range(4,row()):
-				total+=contents[i][j]
+				if is_row_exists(i):
+					total+=contents[i][j]
 			contents[3][j]=total
 #Does the calculations for net migrations of every provinces
 def net_migration():
