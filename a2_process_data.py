@@ -75,12 +75,15 @@ def total():
 #Does the calculations for net migrations of every provinces
 def net_migration():
 	for i in range(4,row()):
-		contents[i][4]=contents[i][2]-contents[i][3]
+		if is_row_exists(i):
+			contents[i][4]=contents[i][2]-contents[i][3]
 #Does the calculations for the rate of net migrations of every provinces
 def rate_of_net():
 	for i in range(3,row()):
-		contents[i][5]=contents[i][4]/contents[i][1]*1000
-		contents[i][5]=round(contents[i][5],2)
+		if is_row_exists(i):
+			contents[i][5]=contents[i][4]/contents[i][1]*1000
+			contents[i][5]=round(contents[i][5],2)
+		
 #Does all calculations together
 def calculate_the_cells():
 	net_migration()
