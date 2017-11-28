@@ -57,7 +57,7 @@ def make_number(row_index,column_index):
 	try:
 		contents[row_index][column_index]=int(contents[row_index][column_index])
 	except ValueError:
-		contents[row_index][column_index]=float(contents[row_index][column_index])
+		contents[row_index][column_index]=round(float(contents[row_index][column_index]),2)
 #Converts whole page-data to their correct type.
 def string_to_number():
 	for i in range(row()):
@@ -109,6 +109,7 @@ template="""<!DOCTYPE html>
         border-color: blue;
         border-collapse:collapse;
         padding:4px 5px 4px 4px;
+        text-align: center;
         }
       .title{
         font-size:18px;
