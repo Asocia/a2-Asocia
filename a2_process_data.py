@@ -18,108 +18,194 @@ with open("a2_input.csv") as input_file:
 ### of how to access the data.
 ### Print your results using the print function.
 #######################################################
+#Counts and returns number of columns
+def column():
+	count=i=0
+	while (True):
+		try:
+			column=contents[0][i]
+			count+=1
+			i+=1
+		except IndexError:
+			return count
+#Counts and returns number of rows
+def row():
+	count=i=0
+	while (True):
+		try:
+			column=contents[i][0]
+			count+=1
+			i+=1
+		except IndexError:
+			return count
+#Checks whether the row is empty
+def is_row_exists(row_index):
+	for i in range(column()):
+		if contents[row_index][i]=="":
+			continue
+		return True
+	return False
+#Checks whether the cell is real number
+def is_number(row_index,column_index):
+	try:
+		float(contents[row_index][column_index])
+		return True
+	except ValueError:
+		return False
+#Converts the string to an integer or a floating number
+def make_number(row_index,column_index):
+	try:
+		contents[row_index][column_index]=int(contents[row_index][column_index])
+	except ValueError:
+		contents[row_index][column_index]=float(contents[row_index][column_index])
+#Converts whole page-data to their correct type.
+def string_to_number():
+	for i in range(row()):
+		for j in range(column()):
+			if is_number(i,j):
+				make_number(i,j)
+#Does the calculations for total population, total in-migration etc...
+def total():
+	for j in range(column()):
+		if is_number(3,j):
+			total=0
+			for i in range(4,row()):
+				total+=contents[i][j]
+			contents[3][j]=total
+#Does the calculations for net migrations of every provinces
+def net_migration():
+	for i in range(4,row()):
+		contents[i][4]=contents[i][2]-contents[i][3]
+#Does the calculations for the rate of net migrations of every provinces
+def rate_of_net():
+	for i in range(3,row()):
+		contents[i][5]=contents[i][4]/contents[i][1]*1000
+		contents[i][5]=round(contents[i][5],2)
+#Does all calculations together
+def calculate_the_cells():
+	net_migration()
+	total()
+	rate_of_net()
 
-#print(contents)
-#print(contents[0])
-#print(contents[0][0])
-#print(type(contents))
-#print(type(contents[0]))
-#print(type(contents[0][0]))
-#print(contents[10][1])
-#print(type(contents[10][1]))
-#print(contents[2][0])
-#The following part evaluates the total population.
-i=total_population=0
-while(True):
-    try:
-        next=contents[i+4][1]
-        total_population+=int(next)
-        i+=1
-    except IndexError:
-        break
-#print("Total population is:",total_population)
-#The following part counts the number of cities
-#with population over 2 million and list them.
-cities=[]
-i=4
-count=0
-while(True):
-    try:
-        if int(contents[i][1])>=2000000:
-            cities+=[contents[i][0]]
-            count+=1
-        i+=1
-    except IndexError:
-        break
-#print("Number of cities with population higher than 2M:",count)
-#print("These cities are:",*cities)
-#Try to calculate a mean average 
-#of some variables and save the result in a variable.
-i=4
-sum=count_2=0
-while(True):
-    try:
-        if int(contents[i][1])>=2000000:
-            sum+=int(contents[i][1])
-            count_2+=1
-        i+=1
-    except IndexError:
-        break
-average=sum//count_2
-#Print the variables that you have saved.
-#print("Average population of cities with population over 2M is:",average)
-#See what happens if you try to print variables 
-#that don't exist, such as contents["chickenchicken"].
-#print(contents["cdf"])
-#This is a TypeError because list indices must be integers or slices
-#not string!
-#print(contents[5161][46546])
-#This is an IndexError because list index is out of range.
-
-#Concatenate some of the strings and print the result.
-#print("My name is"+" Şahin Akkaya")
-#See what happens when you try to concatenate a number and a string.
-#age=18
-#print("My name is"+" Şahin Akkaya. I'm "+age)
-#This is a TypeError.
-
-#See what happens when you try to multiply a number with a string.
-#print("Aşkım seni ç"+"o"*3+"k seviyorum :)")
-
-#Print the types of the results of these calculations.
-#print(type(average))
-#print(type(count))
-#print(type(":)"))
-
-#Run the help() function on some of the variables you have created.
-#help(average)
-
-#STEP 3
-#Output HTML from your Python program
-
-
-#print("-----------------------------------------------------------")
-#print("This assignment (assignment 2) almost has been finished.")
-#print("But all it can do is calculating some stupid things that you would never want to use:")
-#print("Cell at index 0,0:")
-#print(contents[0][0]+" (... But who cares?)")
-#print("Type of the index at 0,1:")
-#print(type(contents[0][1])," (... Still doesn't make any sense.)")
-#print("HTML output for the calculated values"+"  (... Wait, what?? Are you serious?",end=" ")
-#print("I must confess... I'm really impressed now! Let's see then :) )",end="\n\n")
-templete="""<!DOCTYPE html>
+string_to_number()
+calculate_the_cells()
+template="""<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <title>%s</title>
   </head>
+  <style>
+    body{
+      font-family:Calibri, sans-serif;
+      background-color:azure;
+        }
+    th{
+      font-size:18px;
+      color:#000000;
+      
+      }
+    table, tr,th,td{
+      border: 2px solid;
+      border-color: blue;
+      border-collapse:collapse;
+      padding:4px 5px 4px 4px;
+      }
+    .title{
+      font-size:18px;
+      color:#456FEA;
+          }
+  </style>
   <body>
-    <p>Total population is:%d</p>
-    <p>Number of cities with population higher than 2M:%d</p>
-    <p>These cities are: %s</p>
-    <p>Average population of cities with population over 2M is: %d</p>
+    %s
+    %s
   </body>
 </html>
 """
-title="Turkey Population Analysis"
-print(templete %(title,total_population,count,cities,average))
+def title():
+	return "Turkey Population Analysis"
+
+def make_table():
+	return "<table>\n"+make_row()+"\n    </table>"
+def make_row():
+	rows=""
+	for i in range(row()):
+		if is_row_exists(i):
+			rows+="      <tr>\n"+make_column(i)+"      </tr>\n"
+	return rows
+def make_column(i):
+	columns=""
+	colspan=0
+	for j in range(column()):
+		
+		if contents[i][j]=="":
+			colspan+=1
+	for j in range(0,column()):
+		if colspan==0:
+			if i<4:
+				columns+="        <th>"+str(contents[i][j])+"</th>\n"
+			else:
+			    columns+="        <td>"+str(contents[i][j])+"</td>\n"
+			
+		else:
+			columns+="        <th class=\"title\" colspan=\""+str(colspan+1)+"\">"+str(contents[i][j])+"</th>\n"
+			break
+	return columns
+def number_of_cities():
+	count=0
+	for i in range(4,row()):
+		count+=1
+	return count
+def higher_than_2M():
+	count=0
+	for i in range(4,row()):
+		if contents[i][1]>=2000000:
+			count+=1
+	return count
+def lower_than_200k():
+	count=0
+	for i in range(4,row()):
+		if contents[i][1]<=200000:
+			count+=1
+	return count
+def average_population():
+	average=contents[3][1]//number_of_cities()
+	return average
+def avg_over_2M():
+	sum=0
+	for i in range(4,row()):
+		if contents[i][1]>=2000000:
+			sum+=contents[i][1]
+	average=sum//higher_than_2M()
+	return average
+summary_statistics="""
+%s
+"""
+def summary_table():
+	return "    <br><br>\n    <table>\n"+summary_rows()+"    </table>"
+def summary_rows():
+	rows=""
+	for i in range(5):
+		rows+="      <tr>\n"+summary_columns(i)+"      </tr>\n"
+	return rows
+def summary_columns(i):
+	columns=""
+	for j in range(2):
+		columns+="        <td>%s\n        </td>\n"
+	if i==0:
+		return columns%("Number of Cities",str(number_of_cities()))
+	elif i==1:
+		return columns%("Number of Cities with population higher than 2M",str(higher_than_2M()))
+	elif i==2:
+		return columns%("Number of Cities with population lower than 200k",str(lower_than_200k()))
+	elif i==3:
+		return columns%("Average population of cities",str(average_population()))
+	elif i==4:
+		return columns%("Average population of cities with population over 2M",str(avg_over_2M()))
+			
+
+print(template %(title(),make_table(),summary_statistics%summary_table()))
+
+
+
+		
