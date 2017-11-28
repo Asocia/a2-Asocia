@@ -159,18 +159,19 @@ def make_column(i):
 def number_of_cities():
 	count=0
 	for i in range(4,row()):
-		count+=1
+		if is_row_exists(i):
+			count+=1
 	return count
 def higher_than_2M():
 	count=0
 	for i in range(4,row()):
-		if contents[i][1]>=2000000:
+		if is_row_exists(i) and contents[i][1]>=2000000:
 			count+=1
 	return count
 def lower_than_200k():
 	count=0
 	for i in range(4,row()):
-		if contents[i][1]<=200000:
+		if is_row_exists(i) and contents[i][1]<=200000:
 			count+=1
 	return count
 def average_population():
@@ -179,7 +180,7 @@ def average_population():
 def avg_over_2M():
 	sum=0
 	for i in range(4,row()):
-		if contents[i][1]>=2000000:
+		if is_row_exists(i) and contents[i][1]>=2000000:
 			sum+=contents[i][1]
 	average=sum//higher_than_2M()
 	return average
@@ -210,6 +211,8 @@ def summary_columns(i):
 			
 
 print(template %(title(),make_table(),summary_statistics%summary_table()))
+
+#sdadas
 
 
 
