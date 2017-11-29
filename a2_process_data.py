@@ -38,6 +38,60 @@ def row():
 			i+=1
 		except IndexError:
 			return count
+
+def find_starting_point(a):
+	if a == "total":
+		return find_total()
+	elif a == "pop":
+		return population()
+	elif a == "in":
+		return in_migration()
+	elif a == "out":
+		return out_migration()
+	elif a == "net":
+		return find_net()
+	elif a == "rate":
+		return find_rate()
+	
+
+
+def find_total():
+	for i in range(row()):
+		for j in range(column()):
+			if contents[i][j]=="Total":
+				return i
+
+def population():
+	for i in range(row()):
+		for j in range(column()):
+			if contents[i][j]=="Total population":
+				return j
+
+def in_migration():
+	for i in range(row()):
+		for j in range(column()):
+			if contents[i][j]=="In-migration":
+				return j
+def out_migration():
+	for i in range(row()):
+		for j in range(column()):
+			if contents[i][j]=="Out-migration":
+				return j
+
+def find_net():
+	for i in range(row()):
+		for j in range(column()):
+			if contents[i][j]=="Net migration":
+				return j
+
+def find_rate():
+	for i in range(row()):
+		for j in range(column()):
+			if contents[i][j]=="Rate of net migration\n(‰)":
+				return j
+	
+	
+	
 #Checks whether the row is empty
 def is_row_exists(row_index):
 	for i in range(column()):
@@ -69,24 +123,24 @@ def string_to_number():
 #Does the calculations for total population, total in-migration etc...
 def total():
 	for j in range(column()):
-		if is_number(3,j):
+		if is_number(find_starting_point("total"),j):
 			total=0
-			for i in range(4,row()):
+			for i in range(find_starting_point("total")+1,row()):
 				if is_row_exists(i):
 					total+=contents[i][j]
 					
-			contents[3][j]=total
+			contents[find_starting_point("total")][j]=total
 #Does the calculations for net migrations of every provinces
 def net_migration():
-	for i in range(4,row()):
+	for i in range(find_starting_point("total")+1,row()):
 		if is_row_exists(i):
-			contents[i][4]=contents[i][2]-contents[i][3]
+			contents[i][find_starting_point("net")]=contents[i][find_starting_point("in")]-contents[i][find_starting_point("out")]
 #Does the calculations for the rate of net migrations of every provinces
 def rate_of_net():
-	for i in range(3,row()):
+	for i in range(find_starting_point("total"),row()):
 		if is_row_exists(i):
-			contents[i][5]=contents[i][4]/contents[i][1]*1000
-			contents[i][5]=round(contents[i][5],2)
+			contents[i][find_starting_point("rate")]=contents[i][find_starting_point("net")]/contents[i][find_starting_point("pop")]*1000
+			contents[i][find_starting_point("rate")]=round(contents[i][find_starting_point("rate")],2)
 		
 #Does all calculations together
 def calculate_the_cells():
@@ -97,6 +151,8 @@ def calculate_the_cells():
 					
 string_to_number()
 calculate_the_cells()
+for j in range(find_rate(),column()):
+	contents[find_total()][j]= round(contents[find_total()][j],2)
 
 template="""<!DOCTYPE html>
 <html lang="en">
@@ -146,47 +202,69 @@ def make_row():
 def make_column(i):
 	columns=""
 	colspan=0
-	for j in range(column()):
-		
-		if contents[i][j]=="":
-			colspan+=1
-	for j in range(0,column()):
-		if colspan==0:
-			if i<4:
-				columns+="        <th>"+str(contents[i][j])+"</th>\n"
+	for j in reversed(range(column())):
+		if contents[i][j]!="":
+			if colspan==0:
+				if i==0:
+					columns="        <th class=\"title\">"+str(contents[i][j])+"</th>\n"+columns
+				elif i<find_starting_point("total")+1:
+					columns="        <th>"+str(contents[i][j])+"</th>\n"+columns
+				else:
+					columns="        <td>"+str(contents[i][j])+"</td>\n"+columns
+			elif i==0:
+				columns="        <th class=\"title\" colspan=\""+str(colspan+1)+"\">"+str(contents[i][j])+"</th>\n"+columns
+				colspan=0
 			else:
-			    columns+="        <td>"+str(contents[i][j])+"</td>\n"
-			
+				columns="        <th colspan=\""+str(colspan+1)+"\">"+str(contents[i][j])+"</th>\n"+columns
+				colspan=0
 		else:
-			columns+="        <th class=\"title\" colspan=\""+str(colspan+1)+"\">"+str(contents[i][j])+"</th>\n"
-			break
+			colspan+=1
+			
+			
 	return columns
+				
+#	for j in range(column()):
+#		
+#		if contents[i][j]=="":
+#			colspan+=1
+#	for j in range(0,column()):
+#		if colspan==0:
+#			if i<4:
+#				columns+="        <th>"+str(contents[i][j])+"</th>\n"
+#			else:
+#			    columns+="        <td>"+str(contents[i][j])+"</td>\n"
+#			
+#		else:
+#			columns+="        <th class=\"title\" colspan=\""+str(colspan+1)+"\">"+str(contents[i][j])+"</th>\n"
+#			break
+
 def number_of_cities():
 	count=0
-	for i in range(4,row()):
+	for i in range(find_starting_point("total")+1,row()):
 		if is_row_exists(i):
 			count+=1
 	return count
 def higher_than_2M():
 	count=0
-	for i in range(4,row()):
-		if is_row_exists(i) and contents[i][1]>=2000000:
+	for i in range(find_starting_point("total")+1,row()):
+		if is_row_exists(i) and contents[i][find_starting_point("pop")]>=2000000:
 			count+=1
 	return count
 def lower_than_200k():
 	count=0
-	for i in range(4,row()):
-		if is_row_exists(i) and contents[i][1]<=200000:
+	for i in range(find_starting_point("total")+1,row()):
+		if is_row_exists(i) and contents[i][find_starting_point("pop")]<=200000:
 			count+=1
 	return count
 def average_population():
-	average=contents[3][1]//number_of_cities()
+	
+	average=contents[find_starting_point("total")][1]//number_of_cities()
 	return average
 def avg_over_2M():
 	sum=0
-	for i in range(4,row()):
-		if is_row_exists(i) and contents[i][1]>=2000000:
-			sum+=contents[i][1]
+	for i in range(find_starting_point("total")+1,row()):
+		if is_row_exists(i) and contents[i][find_starting_point("pop")]>=2000000:
+			sum+=contents[i][find_starting_point("pop")]
 	average=sum//higher_than_2M()
 	return average
 summary_statistics="""
