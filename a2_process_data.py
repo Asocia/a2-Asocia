@@ -258,7 +258,7 @@ def lower_than_200k():
 	return count
 def average_population():
 	
-	average=contents[find_starting_point("total")][1]//number_of_cities()
+	average=contents[find_starting_point("total")][find_starting_point("pop")]//number_of_cities()
 	return average
 def avg_over_2M():
 	sum=0
