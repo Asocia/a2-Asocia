@@ -148,14 +148,13 @@ def calculate_the_cells():
 	total()
 	rate_of_net()
 
-try:
 
-	string_to_number()
-	calculate_the_cells()
-	for j in range(find_rate(),column()):
-		contents[find_total()][j]= round(contents[find_total()][j],2)
-except IndexError:
-	pass
+
+string_to_number()
+calculate_the_cells()
+for j in range(find_rate(),column()):
+	contents[find_total()][j]= round(contents[find_total()][j],2)
+
 
 
 template="""<!DOCTYPE html>
