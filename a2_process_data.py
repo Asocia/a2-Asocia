@@ -148,11 +148,15 @@ def calculate_the_cells():
 	total()
 	rate_of_net()
 
-					
-string_to_number()
-calculate_the_cells()
-for j in range(find_rate(),column()):
-	contents[find_total()][j]= round(contents[find_total()][j],2)
+try:
+
+	string_to_number()
+	calculate_the_cells()
+	for j in range(find_rate(),column()):
+		contents[find_total()][j]= round(contents[find_total()][j],2)
+except IndexError:
+	pass
+
 
 template="""<!DOCTYPE html>
 <html lang="en">
@@ -206,16 +210,31 @@ def make_column(i):
 		if contents[i][j]!="":
 			if colspan==0:
 				if i==0:
-					columns="        <th class=\"title\">"+str(contents[i][j])+"</th>\n"+columns
+					if is_number(i,j):
+						columns="        <th class=\"title\">"+"{:,}".format(contents[i][j])+"</th>\n"+columns
+					else:
+						columns="        <th class=\"title\">"+str(contents[i][j])+"</th>\n"+columns
 				elif i<find_starting_point("total")+1:
-					columns="        <th>"+str(contents[i][j])+"</th>\n"+columns
+					if is_number(i,j):
+						columns="        <th>"+"{:,}".format(contents[i][j])+"</th>\n"+columns
+					else:
+						columns="        <th>"+str(contents[i][j])+"</th>\n"+columns
 				else:
-					columns="        <td>"+str(contents[i][j])+"</td>\n"+columns
+					if is_number(i,j):
+						columns="        <td>"+"{:,}".format(contents[i][j])+"</td>\n"+columns
+					else:
+						columns="        <td>"+str(contents[i][j])+"</td>\n"+columns
 			elif i==0:
-				columns="        <th class=\"title\" colspan=\""+str(colspan+1)+"\">"+str(contents[i][j])+"</th>\n"+columns
+				if is_number(i,j):
+					columns="        <th class=\"title\" colspan=\""+str(colspan+1)+"\">"+"{:,}".format(contents[i][j])+"</th>\n"+columns
+				else:
+					columns="        <th class=\"title\" colspan=\""+str(colspan+1)+"\">"+str(contents[i][j])+"</th>\n"+columns
 				colspan=0
 			else:
-				columns="        <th colspan=\""+str(colspan+1)+"\">"+str(contents[i][j])+"</th>\n"+columns
+				if is_number(i,j):
+					columns="        <th colspan=\""+str(colspan+1)+"\">"+"{:,}".format(contents[i][j])+"</th>\n"+columns
+				else:
+					columns="        <th colspan=\""+str(colspan+1)+"\">"+str(contents[i][j])+"</th>\n"+columns
 				colspan=0
 		else:
 			colspan+=1
@@ -282,15 +301,15 @@ def summary_columns(i):
 	for j in range(2):
 		columns+="        <td>%s\n        </td>\n"
 	if i==0:
-		return columns%("Number of Cities",str(number_of_cities()))
+		return columns%("Number of Cities","{:,}".format(number_of_cities()))
 	elif i==1:
-		return columns%("Number of Cities with population higher than 2M",str(higher_than_2M()))
+		return columns%("Number of Cities with population higher than 2M","{:,}".format(higher_than_2M()))
 	elif i==2:
-		return columns%("Number of Cities with population lower than 200k",str(lower_than_200k()))
+		return columns%("Number of Cities with population lower than 200k","{:,}".format(lower_than_200k()))
 	elif i==3:
-		return columns%("Average population of cities",str(average_population()))
+		return columns%("Average population of cities","{:,}".format(average_population()))
 	elif i==4:
-		return columns%("Average population of cities with population over 2M",str(avg_over_2M()))
+		return columns%("Average population of cities with population over 2M","{:,}".format(avg_over_2M()))
 			
 print(template %(title(),make_table(),summary_statistics%summary_table()))
 
